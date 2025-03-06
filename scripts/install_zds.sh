@@ -5,7 +5,9 @@
 
 # load nvm
 function load_nvm {
-    export NVM_DIR="$HOME/.nvm"
+    if [ -z "$NVM_DIR" ]; then
+      export NVM_DIR="$HOME/.nvm"
+    fi
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 }
 
