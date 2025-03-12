@@ -16,6 +16,7 @@
     "clean": "node ./node_modules/gulp/bin/gulp.js clean",
     "vite-dev": "vite",
     "vite-build": "vite build",
+    "vite-build2": "vite build --config vite-2.config.js",
     "vite-preview": "vite preview"
   },
   "repository": {
