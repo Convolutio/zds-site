@@ -5,11 +5,12 @@ import Spritesmith from 'vite-plugin-spritesmith';
 export default defineConfig({
     root: 'vite-src',
     build: {
-      outDir: '../dist'
+      outDir: '../dist',
+      emptyOutDir: false,
     },
     resolve: {
       alias: {
-        '@templated-styles': path.resolve(__dirname, 'assets/scss')
+        '@templated-styles': path.resolve(__dirname, './vite-src/assets/scss')
       },
     },
     plugins: [
@@ -20,10 +21,10 @@ export default defineConfig({
         glob: "./assets/images/sprite/*.png",
       },
       target: {
-        image: './dist/images/sprite.png', // TODO: place this in an intermediary path
+        image: './vite-src/assets/images/sprite.png', // TODO: place this in an intermediary path
         css : [
           [
-            './assets/scss/_sprite.scss',
+            './vite-src/assets/scss/_sprite.scss',
             {
               format: 'handlebars_based_template',
             },

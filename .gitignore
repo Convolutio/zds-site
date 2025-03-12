@@ -34,6 +34,7 @@ zdsenv/
 # Front files
 node_modules
 /dist
+/vite-src/assets
 /npm-debug.log
 /geckodriver.log
 
