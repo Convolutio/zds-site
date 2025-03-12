@@ -13,7 +13,10 @@
     "build": "node ./node_modules/gulp/bin/gulp.js build",
     "watch": "node ./node_modules/gulp/bin/gulp.js watch",
     "lint": "node ./node_modules/gulp/bin/gulp.js lint",
-    "clean": "node ./node_modules/gulp/bin/gulp.js clean"
+    "clean": "node ./node_modules/gulp/bin/gulp.js clean",
+    "vite-dev": "vite",
+    "vite-build": "vite build",
+    "vite-preview": "vite preview"
   },
   "repository": {
     "type": "git",
@@ -61,7 +64,8 @@
     "eslint-plugin-promise": "6.1.1",
     "rollup-plugin-postcss": "^4.0.2",
     "sass": "^1.85.1",
-    "vite": "6.2.0"
+    "vite": "6.2.0",
+    "vite-plugin-spritesmith": "^0.1.1"
   },
   "browserslist": [
     "last 2 versions",

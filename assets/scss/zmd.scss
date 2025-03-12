@@ -4,7 +4,7 @@
 
 // FIXME: high-dpi support for icons?
 @use "variables";
-@use "sprite";
+@use "@templated-styles/sprite";
 @use "highlight/zest-hljs";
 @use "components/alert-box";
 @use "base/icons";
