@@ -34,7 +34,10 @@ zdsenv/
 # Front files
 node_modules
 /dist
-/vite-src/assets
+#  Spritesheet files
+/assets/scss/_sprite.scss
+/assets/images/sprite.png
+/assets/images/sprite@2x.png
 /npm-debug.log
 /geckodriver.log
 

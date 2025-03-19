@@ -1,18 +1,23 @@
 import { defineConfig } from "vite";
 import path from "path";
+import glob from "glob";
 import Spritesmith from 'vite-plugin-spritesmith';
 
+const SPRITESMITH_OUTPUT_SCSS_DIR = 'vite-src/assets/scss';
+
 export default defineConfig({
-    root: 'vite-src',
+    root: '.',
     build: {
-      outDir: '../dist',
+      outDir: './dist',
+      assetsDir: '.',
       emptyOutDir: false,
+      rollupOptions: {
+      input: { a: 'vite-src/main.js' }
+        // input: glob.sync(path.resolve(__dirname, SPRITESMITH_OUTPUT_SCSS_DIR)) // TODO: register each input directory
+      }
     },
     resolve: {
-      alias: {
-        '@templated-styles': path.resolve(__dirname, './vite-src/assets/scss')
-      },
-    },
+  },
     plugins: [
       Spritesmith({
       watch: true,
@@ -21,10 +26,10 @@ export default defineConfig({
         glob: "./assets/images/sprite/*.png",
       },
       target: {
-        image: './vite-src/assets/images/sprite.png', // TODO: place this in an intermediary path
+        image: './assets/images/sprite.png', // TODO: place this in an intermediary path
         css : [
           [
-            './vite-src/assets/scss/_sprite.scss',
+            "./assets/scss/_sprite.scss",
             {
               format: 'handlebars_based_template',
             },
@@ -46,9 +51,9 @@ export default defineConfig({
     ],
     css: {
         preprocessorOptions: {
-            scss: {
-                sourceMap: true
-            }
+          scss: {
+            sourceMap: true,
+          }
         },
         postcss: {
             plugins: [
