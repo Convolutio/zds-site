@@ -2,6 +2,8 @@ import { defineConfig } from "vite";
 import path from "path";
 import glob from "glob";
 import Spritesmith from 'vite-plugin-spritesmith';
+import autoprefixer from "autoprefixer";
+import cssnanoPlugin from "cssnano";
 
 const SPRITESMITH_OUTPUT_SCSS_DIR = 'vite-src/assets/scss';
 
@@ -57,8 +59,8 @@ export default defineConfig({
         },
         postcss: {
             plugins: [
-                require("autoprefixer"),
-                require("cssnano")
+                autoprefixer,
+                cssnanoPlugin
             ]
         }
     }
