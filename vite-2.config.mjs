@@ -1,25 +1,41 @@
 import { defineConfig } from "vite";
-import path from "path";
-import glob from "glob";
 import Spritesmith from 'vite-plugin-spritesmith';
 import autoprefixer from "autoprefixer";
 import cssnanoPlugin from "cssnano";
-
-const SPRITESMITH_OUTPUT_SCSS_DIR = 'vite-src/assets/scss';
 
 export default defineConfig({
     root: '.',
     build: {
       outDir: './dist',
       assetsDir: '.',
-      emptyOutDir: false,
+      sourcemap: true,
+      emptyOutDir: true, // TODO: remove when Gulp is needed
       rollupOptions: {
-      input: { a: 'vite-src/main.js' }
-        // input: glob.sync(path.resolve(__dirname, SPRITESMITH_OUTPUT_SCSS_DIR)) // TODO: register each input directory
+        input: {
+          main: "./vite-src/main.js",
+          zmd: "./vite-src/main_zmd.js"
+        },
+        output: {
+            assetFileNames: (assetInfo) => {
+              // Extract the subdirectory structure from the source path
+              const assetPath = assetInfo.originalFileNames[0] || '';
+              const parts = assetPath.split('/'); // Split into path parts
+
+              // Ensure we're handling files inside "assets/"
+              if (parts[0] === "assets") {
+                const subDir = parts.slice(1, parts.length-1).join("/"); // Get subdirectory
+                return `${subDir}/[name][extname]`; // Organize assets in subfolders
+              }
+              const assetName = assetInfo.names[0] || '';
+              if (assetName.endsWith(".css"))
+                return "css/[name][extname]"
+
+              // Default fallback if no subdirectory found
+              return 'assets/[name][extname]';
+            }
+        }
       }
     },
-    resolve: {
-  },
     plugins: [
       Spritesmith({
       watch: true,
@@ -52,6 +68,7 @@ export default defineConfig({
     })
     ],
     css: {
+        devSourcemap: true,
         preprocessorOptions: {
           scss: {
             sourceMap: true,
