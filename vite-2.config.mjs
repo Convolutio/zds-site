@@ -13,6 +13,8 @@ const NAME_MAP = {
   * Get also sourcemaps for all CSS files, required by Django's ManifestStaticFilesStorage since 4.1 (see
   * https://docs.djangoproject.com/fr/4.2/ref/contrib/staticfiles/#manifeststaticfilesstorage) */
   "all.min": "vite-src/fontawesome__css.js",
+  // Prepares files for zmarkdown
+  "katex.min": "vite-src/zmarkdown__css.js",
   // Generates CSS for the static error pages in the folder `errors/`
   "errors.main": "vite-src/errors__css.js"
 }
@@ -27,6 +29,10 @@ const outputHandling = {
     // Get icon fonts files from packages
     if (originalFileName.startsWith('node_modules/@fortawesome/fontawesome-free/webfonts')) {
       return `webfonts/[name][extname]`;
+    }
+    // Prepares files for zmarkdown
+    if (originalFileName.startsWith('zmd/node_modules/katex/dist/fonts')) {
+      return 'css/fonts/[name][extname]'
     }
     return false;
   },
