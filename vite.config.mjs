@@ -86,7 +86,8 @@ export default defineConfig({
               return 'assets/[name][extname]';
             }
         }
-      }
+      },
+      cssCodeSplit: true
     },
     plugins: [
       Spritesmith({
@@ -96,7 +97,7 @@ export default defineConfig({
         glob: "./assets/images/sprite/*.png",
       },
       target: {
-        image: './assets/images/sprite.png', // TODO: place this in an intermediary path
+        image: './assets/images/sprite.png',
         css : [
           [
             "./assets/scss/_sprite.scss",
@@ -108,7 +109,7 @@ export default defineConfig({
       },
       retina: "@2x",
       apiOptions: {
-        cssImageRef: '/images/sprite.png', // TODO: change this path
+        cssImageRef: '/images/sprite.png',
         spritesheet_info: {
           name: 'vite1',
           format: 'handlebars_based_template_retina',
