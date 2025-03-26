@@ -17,7 +17,11 @@ const NAME_MAP = {
   // Prepares files for zmarkdown
   "katex.min": "vite-src/zmarkdown__css.js",
   // Generates CSS for the static error pages in the folder `errors/`
-  "errors.main": "vite-src/errors__css.js"
+  "errors.main": "vite-src/errors__css.js",
+  // Prepares files for easy mde
+  "easymde.min": "vite-src/easymde__css.js",
+  // Get text fonts files from packages
+  fontsource: "vite-src/fontsource.js"
 }
 const reversed_map = Object.entries(NAME_MAP).reduce((acc, pair) => ({...acc, [pair[1]]: pair[0]}), {});
 
@@ -71,7 +75,6 @@ export default defineConfig({
       rollupOptions: {
         input: NAME_MAP,
         output: {
-            sourcemap: true,
             assetFileNames: (assetInfo) => {
               // Extract the subdirectory structure from the source path
               const assetPath = assetInfo.originalFileNames[0] || '';
