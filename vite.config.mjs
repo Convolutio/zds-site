@@ -6,7 +6,7 @@ import viteImageMin from "vite-plugin-imagemin";
 
 const NAME_MAP = {
   // Load all the images in the assets
-  picture: "vite-src/pictures.js",
+  picture: "vite-src/pictures.html",
   // Generates CSS for the website and the ebooks
   main: "vite-src/main__css.js",
   zmd: "vite-src/main_zmd__css.js",
@@ -91,7 +91,8 @@ export default defineConfig({
             }
         }
       },
-      cssCodeSplit: true
+      cssCodeSplit: true,
+      assetsInlineLimit: 0
     },
     plugins: [
       Spritesmith({
