@@ -7,6 +7,8 @@ import viteImageMin from "vite-plugin-imagemin";
 const NAME_MAP = {
   // Load all the images in the assets
   picture: "vite-src/pictures.html",
+
+  "js/script": "vite-src/script.js",
   // Generates CSS for the website and the ebooks
   main: "vite-src/main__css.js",
   zmd: "vite-src/main_zmd__css.js",

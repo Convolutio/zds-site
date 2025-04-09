@@ -1,6 +1,6 @@
 // by Thunderseb
 
-(function(window, document, undefined){
+const fun = (function(window, document, undefined){
     "use strict";
 
     if (localStorage.getItem('editor_choice') !== 'old') {
@@ -906,3 +906,5 @@ if (localStorage.getItem('editor_choice') === 'old') {
         });
     });
 }
+
+export default fun;
