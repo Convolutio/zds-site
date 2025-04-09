@@ -64,7 +64,7 @@ const outputHandling = {
       return `css/${name}[extname]`;
     }
     return false;
-  }
+  },
 }
 
 export default defineConfig({
@@ -90,6 +90,12 @@ export default defineConfig({
 
               // Default fallback if no subdirectory found
               return 'assets/[name][extname]';
+            },
+            entryFileNames: (entryInfo) => {
+              // Remove hash
+              if (entryInfo.name.startsWith("js/"))
+                return '[name].js';
+              return '[name]-[hash].js';
             }
         }
       },
