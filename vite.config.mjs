@@ -73,15 +73,14 @@ function staticCopyOfLibs() {
   // TODO: for opitimizing the loading, these assets should be loaded as lib
   // assets, not statically copied
   const paths = [
-    'jquery/dist/jquery.min.js',
+    'jquery/dist/jquery.min.js', // .map addable
     'moment/min/moment.min.js',
     'moment/locale/fr.js',
     'chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
     'chart.js/dist/chart.min.js',
     'easymde/dist/easymde.min.js',
-    'jdenticon/dist/jdenticon.min.js',
-    'jdenticon/dist/jdenticon.min.js.map',
-  ].map(p => path.resolve(__dirname, "node_modules/" + p)).concat(path.resolve('node_modules/mathjax/unpacked/**'))
+    'jdenticon/dist/jdenticon.min.js', // .map addable
+  ].map(p => path.resolve(__dirname, "node_modules/" + p)).concat(path.resolve('node_modules/mathjax/unpacked/*'))
    .map(normalizePath);
   console.log(paths);
   return viteStaticCopy({ targets: paths.map(
