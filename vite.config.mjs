@@ -1,8 +1,10 @@
-import { defineConfig } from "vite";
+import { defineConfig, normalizePath } from "vite";
+import path from "node:path";
 import Spritesmith from 'vite-plugin-spritesmith';
 import autoprefixer from "autoprefixer";
 import cssnanoPlugin from "cssnano";
 import viteImageMin from "vite-plugin-imagemin";
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 const NAME_MAP = {
   // Load all the images in the assets
@@ -65,6 +67,26 @@ const outputHandling = {
     }
     return false;
   },
+}
+
+function staticCopyOfLibs() {
+  // TODO: for opitimizing the loading, these assets should be loaded as lib
+  // assets, not statically copied
+  const paths = [
+    'jquery/dist/jquery.min.js',
+    'moment/min/moment.min.js',
+    'moment/locale/fr.js',
+    'chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
+    'chart.js/dist/chart.min.js',
+    'easymde/dist/easymde.min.js',
+    'jdenticon/dist/jdenticon.min.js',
+    'jdenticon/dist/jdenticon.min.js.map',
+  ].map(p => path.resolve(__dirname, "node_modules/" + p)).concat(path.resolve('node_modules/mathjax/unpacked/**'))
+   .map(normalizePath);
+  console.log(paths);
+  return viteStaticCopy({ targets: paths.map(
+    p => ({ src: p, dest: 'js/' })
+  ) });
 }
 
 export default defineConfig({
@@ -145,7 +167,8 @@ export default defineConfig({
           }
         ]
       }
-    })
+    }),
+    staticCopyOfLibs(),
     ],
     css: {
         devSourcemap: true,
