@@ -1,10 +1,11 @@
 import { defineConfig, normalizePath } from "vite";
 import path from "node:path";
-import Spritesmith from 'vite-plugin-spritesmith';
+import fs from "node:fs";
+import Spritesmith from "vite-plugin-spritesmith";
 import autoprefixer from "autoprefixer";
 import cssnanoPlugin from "cssnano";
 import viteImageMin from "vite-plugin-imagemin";
-import { viteStaticCopy } from 'vite-plugin-static-copy';
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 const NAME_MAP = {
   // Load all the images in the assets
@@ -15,8 +16,8 @@ const NAME_MAP = {
   main: "vite-src/main__css.js",
   zmd: "vite-src/main_zmd__css.js",
   /* Get CSS minified files from packages
-  * Get also sourcemaps for all CSS files, required by Django's ManifestStaticFilesStorage since 4.1 (see
-  * https://docs.djangoproject.com/fr/4.2/ref/contrib/staticfiles/#manifeststaticfilesstorage) */
+   * Get also sourcemaps for all CSS files, required by Django's ManifestStaticFilesStorage since 4.1 (see
+   * https://docs.djangoproject.com/fr/4.2/ref/contrib/staticfiles/#manifeststaticfilesstorage) */
   "all.min": "vite-src/fontawesome__css.js",
   // Prepares files for zmarkdown
   "katex.min": "vite-src/zmarkdown__css.js",
@@ -25,162 +26,196 @@ const NAME_MAP = {
   // Prepares files for easy mde
   "easymde.min": "vite-src/easymde__css.js",
   // Get text fonts files from packages
-  fontsource: "vite-src/fontsource.js"
-}
-const reversed_map = Object.entries(NAME_MAP).reduce((acc, pair) => ({...acc, [pair[1]]: pair[0]}), {});
+  fontsource: "vite-src/fontsource.js",
+};
+const reversed_map = Object.entries(NAME_MAP).reduce(
+  (acc, pair) => ({ ...acc, [pair[1]]: pair[0] }),
+  {},
+);
 
 const outputHandling = {
-  process_lib_assets : (originalFileName, assetName) => {
+  process_lib_assets: (originalFileName, assetName) => {
     // Get text fonts files from packages
-    if (originalFileName.startsWith('node_modules/@fontsource')) {
+    if (originalFileName.startsWith("node_modules/@fontsource")) {
       return `css/files/[name][extname]`;
     }
     // Get icon fonts files from packages
-    if (originalFileName.startsWith('node_modules/@fortawesome/fontawesome-free/webfonts')) {
+    if (
+      originalFileName.startsWith(
+        "node_modules/@fortawesome/fontawesome-free/webfonts",
+      )
+    ) {
       return `webfonts/[name][extname]`;
     }
     // Prepares files for zmarkdown
-    if (originalFileName.startsWith('zmd/node_modules/katex/dist/fonts')) {
-      return 'css/fonts/[name][extname]'
+    if (originalFileName.startsWith("zmd/node_modules/katex/dist/fonts")) {
+      return "css/fonts/[name][extname]";
     }
     return false;
   },
 
-  process_source_assets : (originalFileName, assetName) => {
+  process_source_assets: (originalFileName, assetName) => {
     // Keep the same directory structure as in the assets directory
-    const parts = originalFileName.split('/');
+    const parts = originalFileName.split("/");
     if (parts[0] === "assets") {
-      const subDir = parts.slice(1, parts.length-1).join("/");
+      const subDir = parts.slice(1, parts.length - 1).join("/");
       return `${subDir}/[name][extname]`;
     }
     return false;
   },
 
-  process_css : (originalFileName, assetName) => {
+  process_css: (originalFileName, assetName) => {
     // Custom css output must be defined as in the NAME_MAP
     if (assetName.endsWith("css")) {
       if (originalFileName.endsWith("errors__css.js"))
         // TODO: put this file in the correct erros directory
+        // for now, it is managed by the packag
         return `css/errors[extname]`;
       const name = reversed_map[originalFileName];
       return `css/${name}[extname]`;
     }
     return false;
   },
-}
+};
 
 function staticCopyOfLibs() {
   // TODO: for opitimizing the loading, these assets should be loaded as lib
   // assets, not statically copied
   const paths = [
-    'jquery/dist/jquery.min.js', // .map addable
-    'moment/min/moment.min.js',
-    'moment/locale/fr.js',
-    'chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
-    'chart.js/dist/chart.min.js',
-    'easymde/dist/easymde.min.js',
-    'jdenticon/dist/jdenticon.min.js', // .map addable
-  ].map(p => path.resolve(__dirname, "node_modules/" + p)).concat(path.resolve('node_modules/mathjax/unpacked/*'))
-   .map(normalizePath);
-  console.log(paths);
-  return viteStaticCopy({ targets: paths.map(
-    p => ({ src: p, dest: 'js/' })
-  ) });
+    "jquery/dist/jquery.min.js", // .map addable
+    "moment/min/moment.min.js",
+    "moment/locale/fr.js",
+    "chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js",
+    "chart.js/dist/chart.min.js",
+    "easymde/dist/easymde.min.js",
+    "jdenticon/dist/jdenticon.min.js", // .map addable
+  ]
+    .map((p) => path.resolve(__dirname, "node_modules/" + p))
+    .concat(path.resolve("node_modules/mathjax/unpacked/*"))
+    .map(normalizePath);
+  return viteStaticCopy({
+    targets: paths.map((p) => ({ src: p, dest: "js/" })),
+  });
 }
 
-export default defineConfig({
-    root: '.',
+export default defineConfig(({ command }) => {
+  const inWatchMode = command === "serve";
+  return {
+    root: ".",
     build: {
-      outDir: './dist',
-      assetsDir: '.',
+      outDir: "./dist",
+      assetsDir: ".",
       sourcemap: true,
       emptyOutDir: true, // TODO: remove when Gulp is needed
       rollupOptions: {
         input: NAME_MAP,
         output: {
-            assetFileNames: (assetInfo) => {
-              // Extract the subdirectory structure from the source path
-              const assetPath = assetInfo.originalFileNames[0] || '';
-              const assetName = assetInfo.names[0] || '';
+          assetFileNames: (assetInfo) => {
+            // Extract the subdirectory structure from the source path
+            const assetPath = assetInfo.originalFileNames[0] || "";
+            const assetName = assetInfo.names[0] || "";
 
-              for (const k of Object.keys(outputHandling)) {
-                 const fn = outputHandling[k];
-                 const result = fn(assetPath, assetName);
-                 if (result !== false) return result;
-              }
-
-              // Default fallback if no subdirectory found
-              return 'assets/[name][extname]';
-            },
-            entryFileNames: (entryInfo) => {
-              // Remove hash
-              if (entryInfo.name.startsWith("js/"))
-                return '[name].js';
-              return '[name]-[hash].js';
+            for (const k of Object.keys(outputHandling)) {
+              const fn = outputHandling[k];
+              const result = fn(assetPath, assetName);
+              if (result !== false) return result;
             }
-        }
+
+            // Default fallback if no subdirectory found
+            return "assets/[name][extname]";
+          },
+          entryFileNames: (entryInfo) => {
+            // Remove hash
+            if (entryInfo.name.startsWith("js/")) return "[name].js";
+            return "[name]-[hash].js";
+          },
+        },
       },
       cssCodeSplit: true,
-      assetsInlineLimit: 0
+      assetsInlineLimit: 0,
     },
     plugins: [
       Spritesmith({
-      watch: true,
-      src: {
-        cwd: ".",
-        glob: "./assets/images/sprite/*.png",
-      },
-      target: {
-        image: './assets/images/sprite.png',
-        css : [
-          [
-            "./assets/scss/_sprite.scss",
-            {
-              format: 'handlebars_based_template',
-            },
-          ]
-        ]
-      },
-      retina: "@2x",
-      apiOptions: {
-        cssImageRef: '/images/sprite.png',
-        spritesheet_info: {
-          name: 'vite1',
-          format: 'handlebars_based_template_retina',
+        watch: inWatchMode,
+        src: {
+          cwd: ".",
+          glob: "./assets/images/sprite/*.png",
         },
-      },
-      customTemplates: {
-        handlebars_based_template_retina: './assets/scss/_sprite.scss.hbs',
-      }
-    }),
-    viteImageMin({
-      gifsicle: {},
-      mozjpeg: {},
-      optipng: {},
-      svgo: {
-        plugins: [
-          {
-            // Avoid over-optimizing svg animations
-            name: 'removeHiddenElems',
-            active: false
+        target: {
+          image: "./assets/images/sprite.png",
+          css: [
+            [
+              "./assets/scss/_sprite.scss",
+              {
+                format: "handlebars_based_template",
+              },
+            ],
+          ],
+        },
+        retina: "@2x",
+        apiOptions: {
+          cssImageRef: "/images/sprite.png",
+          spritesheet_info: {
+            name: "vite1",
+            format: "handlebars_based_template_retina",
+          },
+        },
+        customTemplates: {
+          handlebars_based_template_retina: "./assets/scss/_sprite.scss.hbs",
+        },
+      }),
+      viteImageMin({
+        gifsicle: {},
+        mozjpeg: {},
+        optipng: {},
+        svgo: {
+          plugins: [
+            {
+              // Avoid over-optimizing svg animations
+              name: "removeHiddenElems",
+              active: false,
+            },
+          ],
+        },
+      }),
+      staticCopyOfLibs(),
+      {
+        name: 'move-after-build',
+        closeBundle() {
+          // Move errors.css in the correct directory
+          const source = path.resolve(__dirname, 'dist/css/errors.css');
+          const destination = path.resolve(__dirname, 'errors/css/errors.css');
+          if (fs.existsSync(source)) {
+            fs.renameSync(source, destination);
+            console.log(`🚚 Fichier errors.css déplacé vers : ${destination}`);
           }
-        ]
+
+          // Delete the useless files generated by Vite
+          const viteFilesToDelete = [
+            path.resolve(__dirname, 'dist/*.js'),
+            path.resolve(__dirname, 'dist/*.map'),
+          ];
+          for (const file of viteFilesToDelete) {
+            if (fs.existsSync(file)) {
+              fs.unlinkSync(file);
+              console.log(`🗑️ Deleted: ${file}`);
+            }
+          }
+          const viteDirToDelete = path.resolve(__dirname, 'dist/vite-src');
+          fs.rmSync(viteDirToDelete, { recursive: true, force: true });
+        }
       }
-    }),
-    staticCopyOfLibs(),
     ],
     css: {
-        devSourcemap: true,
-        preprocessorOptions: {
-          scss: {
-            sourceMap: true,
-          }
+      devSourcemap: true,
+      preprocessorOptions: {
+        scss: {
+          sourceMap: true,
         },
-        postcss: {
-            plugins: [
-                autoprefixer,
-                cssnanoPlugin
-            ]
-        }
-    }
+      },
+      postcss: {
+        plugins: [autoprefixer, cssnanoPlugin],
+      },
+    },
+  };
 });
