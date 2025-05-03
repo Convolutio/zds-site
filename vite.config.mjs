@@ -136,6 +136,7 @@ export default defineConfig(({ command }) => {
   const inWatchMode = command === "serve";
   return {
     root: ".",
+    base: './',
     build: {
       outDir: "./dist",
       assetsDir: ".",
@@ -188,7 +189,7 @@ export default defineConfig(({ command }) => {
         },
         retina: "@2x",
         apiOptions: {
-          cssImageRef: "../images/sprite.png",
+          cssImageRef: "/assets/images/sprite.png",
           spritesheet_info: {
             name: "vite1",
             format: "handlebars_based_template_retina",

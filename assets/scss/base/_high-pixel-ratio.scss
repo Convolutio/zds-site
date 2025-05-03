@@ -9,7 +9,7 @@
        only screen and (min-resolution: 2dppx) {
 
     .header-container .header-logo-link {
-        background-image: url('/static/images/logo@2x.png');
+        background-image: url(/assets/images/logo@2x.png);
     }
 
     .ico,
@@ -27,15 +27,15 @@
     }
 
     .home .home-search-box::before {
-        background-image: url('/static/images/home-clem@2x.png');
+        background-image: url(/assets/images/home-clem@2x.png);
 
         @at-root {
             body.vc-clem-christmas.home .home-search-box::before {
-                background-image: url('/static/images/home-clem-christmas@2x.png');
+                background-image: url(/assets/images/home-clem-christmas@2x.png);
             }
 
             body.vc-clem-halloween.home .home-search-box::before {
-                background-image: url('/static/images/home-clem-halloween@2x.png');
+                background-image: url(/assets/images/home-clem-halloween@2x.png);
             }
         }
     }
@@ -53,6 +53,6 @@
     }
 
     .page-container .header-logo-link {
-        background-image: url('/static/images/logo-mobile@2x.png') !important;
+        background-image: url(/assets/images/logo-mobile@2x.png) !important;
     }
 }
