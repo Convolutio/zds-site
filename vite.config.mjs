@@ -12,6 +12,7 @@ const NAME_MAP = {
   picture: "vite-src/pictures.html",
 
   "js/script": "vite-src/script.js",
+  "js/chartjs-module": "vite-src/chartjs.js",
   // Generates CSS for the website and the ebooks
   main: "vite-src/main__css.js",
   zmd: "vite-src/main_zmd__css.js",
@@ -83,10 +84,6 @@ function staticCopyOfLibs() {
   // assets, not statically copied
   const paths = [
     "jquery/dist/jquery.min.js", // .map addable
-    "moment/min/moment.min.js",
-    "moment/locale/fr.js",
-    "chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js",
-    "chart.js/dist/chart.min.js",
     "easymde/dist/easymde.min.js",
     "jdenticon/dist/jdenticon.min.js", // .map addable
   ]

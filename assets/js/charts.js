@@ -1,4 +1,16 @@
+import { Chart } from "chart.js";
+import moment from "moment";
+
 export default (function() {
+
+  // Adapter for chartjs
+  (async () => {
+    // TODO: load this in another way so the script can be in commonjs
+    await import("chartjs-adapter-moment");
+    // TODO: load the fr locale in a better way here
+    await import("../../node_modules/moment/locale/fr");
+  })();
+
   /**
    * HSV to RGB color conversion
    *
@@ -82,7 +94,7 @@ export default (function() {
     const dataX = JSON.parse(chartEl.getAttribute('data-time'))
     const times = []
     dataX.forEach(function(element) {
-      times.push(window.moment(element).format('DD/MM/YYYY'))
+      times.push(moment(element).format('DD/MM/YYYY'))
     })
 
     const allObjectData = chartEl.dataset
@@ -130,7 +142,7 @@ export default (function() {
         }
       }
     }
-    charts.push(new window.Chart(chartEl, config))
+    charts.push(new Chart(chartEl, config))
   }
 
   // Switching between a graph with lines and a graph with bars

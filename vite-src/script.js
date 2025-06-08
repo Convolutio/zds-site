@@ -8,4 +8,5 @@ window.ajax = new ZDSAjax();
 import.meta.glob([
     "../assets/js/common/*.js",
     "../assets/js/*.js",
+    "!../assets/js/charts.js"
   ], { eager: true, import: 'default' });
