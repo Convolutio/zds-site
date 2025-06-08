@@ -12,6 +12,7 @@ const NAME_MAP = {
   picture: "vite-src/pictures.html",
 
   "js/script": "vite-src/script.js",
+  "js/charts-module": "vite-src/chartjs.js",
   // Generates CSS for the website and the ebooks
   main: "vite-src/main__css.js",
   zmd: "vite-src/main_zmd__css.js",
